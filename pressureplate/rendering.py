@@ -99,7 +99,14 @@ class Viewer:
         pyglet.resource.reindex()
 
         # self.img_apple = pyglet.resource.image("apple.png")
-        self.img_agent = pyglet.resource.image("agent.png")
+        self.img_agent = []
+        self.img_agent.append(pyglet.resource.image("agent1.png"))
+        self.img_agent.append(pyglet.resource.image("agent2.png"))
+        self.img_agent.append(pyglet.resource.image("agent3.png"))
+        self.img_agent.append(pyglet.resource.image("agent4.png"))
+        
+        
+        
         self.img_wall = pyglet.resource.image('brick-wall.png')
         self.img_door = pyglet.resource.image('spiked-fence.png')
         # self.img_door_left = pyglet.resource.image('doorway_left.png')
@@ -188,17 +195,19 @@ class Viewer:
     def _draw_players(self, env):
         players = []
         batch = pyglet.graphics.Batch()
-
+        nami = 0
         for player in env.agents:
             row, col = player.y, player.x
             players.append(
                 pyglet.sprite.Sprite(
-                    self.img_agent,
+                    self.img_agent[nami],
                     self.grid_size * col,
                     self.height - self.grid_size * (row + 1),
                     batch=batch,
                 )
             )
+            nami+=1
+            
         for p in players:
             p.update(scale=self.grid_size / p.width)
         batch.draw()
