@@ -46,5 +46,5 @@ num_agents = 3            # Number of agents in the rollout
 rollout_agent = MultiAgentRollout(env_name, num_agents)
 
 # Run the rollout
-rewards = rollout_agent.run_rollout(max_steps=20000)
+rewards = rollout_agent.run_rollout(max_steps=2000)
 print("Total Rewards for each agent:", rewards)

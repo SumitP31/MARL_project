@@ -228,7 +228,7 @@ class PressurePlate(gym.Env):
 
         for agent in self.agents:
             x, y = agent.x, agent.y
-            pad = self.sensor_range // 2
+            pad = self.sensor_range 
 
             x_left = max(0, x - pad)
             x_right = min(self.grid_size[1] - 1, x + pad)
@@ -290,7 +290,7 @@ class PressurePlate(gym.Env):
             _goal = _goal.reshape(-1)
 
             # Concat
-            obs.append(np.concatenate((_agents, _walls, _doors, _plates, _goal, np.array([x, y])), axis=0, dtype=np.float32))
+            obs.append(np.concatenate((_agents, _walls, _doors, _plates, np.array([x, y])), axis=0, dtype=np.float32))
 
         return tuple(obs)
 
