@@ -7,15 +7,15 @@ import random
 # Hyperparameters
 n_episodes = 50          # Total number of episodes to run
 max_steps = 1000         # Max steps per episode
-gridsize = (15, 9)       # Size of the grid environment
+gridsize = (28, 16)       # Size of the grid environment
 n_agents = 4             # Number of agents in the environment
 n_actions = 5            # Number of possible actions each agent can take
 a_range = 2              # Agent's observation range
 a_co = ((2 * a_range + 1) ** 2) * 4  # Index for agent coordinates in observation
 
 # Q-learning parameters
-alpha = 1             # Learning rate
-gamma = 0.99             # Discount factor for future rewards
+alpha = 1          # Learning rate
+gamma = 1          # Discount factor for future rewards
 epsilon = 1e-1           # Epsilon for epsilon-greedy policy
 threshold = 2e4          # Convergence threshold for episodic reward value
 
@@ -114,7 +114,7 @@ def main():
                 
                 env.render()
                 # Uncomment to slow down rendering
-                # time.sleep(0.1)
+                # time.sleep(0.05)
 
 if __name__ == "__main__":
     main()

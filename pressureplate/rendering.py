@@ -104,7 +104,8 @@ class Viewer:
         self.img_agent.append(pyglet.resource.image("agent2.png"))
         self.img_agent.append(pyglet.resource.image("agent3.png"))
         self.img_agent.append(pyglet.resource.image("agent4.png"))
-        
+        self.img_agent.append(pyglet.resource.image("agent5.png"))
+        self.img_agent.append(pyglet.resource.image("agent6.png"))
         
         
         self.img_wall = pyglet.resource.image('brick-wall.png')

@@ -93,11 +93,11 @@ class PressurePlate(gym.Env):
             else:
                 raise ValueError(f'Number of agents given ({self.n_agents}) is not supported.')
 
-        self.max_dist = np.linalg.norm(np.array([0, 0]) - np.array([2, 8]), 1)
+        self.max_dist = np.linalg.norm(np.array([0, 0]) - np.array([2, 8]), 1) 
         self.agent_order = list(range(n_agents))
         self.viewer = None
 
-        self.room_boundaries = np.unique(np.array(self.layout['WALLS'])[:, 1]).tolist()[::-1]
+        self.room_boundaries = [20,12,5]
         self.room_boundaries.append(-1)
 
     def step(self, actions):
@@ -342,6 +342,7 @@ class PressurePlate(gym.Env):
             else:
                 reward = -len(self.room_boundaries)+1 + curr_room
             
+            print(self.room_boundaries)
             rewards.append(reward)
         return rewards
 
