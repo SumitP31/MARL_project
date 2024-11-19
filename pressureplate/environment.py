@@ -223,11 +223,17 @@ class PressurePlate(gym.Env):
 
         return self._get_obs()
 
-    def _get_obs(self):
+    def _get_obs(self, mode = False, agents_loc = [[0,0], [1,1], [2,2], [3,3]], a = 0):
         obs = []
-
+        i = 0         
+        
         for agent in self.agents:
             x, y = agent.x, agent.y
+            
+            if mode:
+                x, y = agents_loc[i,0], agents_loc[i,1]
+                i += 1
+            
             pad = self.sensor_range 
 
             x_left = max(0, x - pad)
@@ -341,8 +347,7 @@ class PressurePlate(gym.Env):
                 reward = - np.linalg.norm((np.array(plate_loc) - np.array(agent_loc)), 1) / self.max_dist
             else:
                 reward = -len(self.room_boundaries)+1 + curr_room
-            
-            print(self.room_boundaries)
+             
             rewards.append(reward)
         return rewards
 
