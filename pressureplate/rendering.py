@@ -74,14 +74,14 @@ class Viewer:
         # Let's have the display auto-scale to a 500x500 window
         self.rows, self.cols = world_size
 
-        self.grid_size = 1000 / self.rows
-        self.icon_size = 20
+        self.grid_size = 750 / self.rows
+        self.icon_size = 15
 
         self.width = self.cols * self.grid_size + 1
         self.height = self.rows * self.grid_size + 1
 
-        disp_height = 1000
-        disp_width = 1000 * (self.cols / self.rows)
+        disp_height = 750
+        disp_width = 750 * (self.cols / self.rows)
 
         self.window = pyglet.window.Window(
             width=int(disp_width), height=disp_height, display=display
@@ -99,7 +99,15 @@ class Viewer:
         pyglet.resource.reindex()
 
         # self.img_apple = pyglet.resource.image("apple.png")
-        self.img_agent = pyglet.resource.image("agent.png")
+        self.img_agent = []
+        self.img_agent.append(pyglet.resource.image("agent1.png"))
+        self.img_agent.append(pyglet.resource.image("agent2.png"))
+        self.img_agent.append(pyglet.resource.image("agent3.png"))
+        self.img_agent.append(pyglet.resource.image("agent4.png"))
+        self.img_agent.append(pyglet.resource.image("agent5.png"))
+        self.img_agent.append(pyglet.resource.image("agent6.png"))
+        
+        
         self.img_wall = pyglet.resource.image('brick-wall.png')
         self.img_door = pyglet.resource.image('spiked-fence.png')
         # self.img_door_left = pyglet.resource.image('doorway_left.png')
@@ -188,17 +196,19 @@ class Viewer:
     def _draw_players(self, env):
         players = []
         batch = pyglet.graphics.Batch()
-
+        nami = 0
         for player in env.agents:
             row, col = player.y, player.x
             players.append(
                 pyglet.sprite.Sprite(
-                    self.img_agent,
+                    self.img_agent[nami],
                     self.grid_size * col,
                     self.height - self.grid_size * (row + 1),
                     batch=batch,
                 )
             )
+            nami+=1
+            
         for p in players:
             p.update(scale=self.grid_size / p.width)
         batch.draw()

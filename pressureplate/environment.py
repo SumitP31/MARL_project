@@ -93,11 +93,11 @@ class PressurePlate(gym.Env):
             else:
                 raise ValueError(f'Number of agents given ({self.n_agents}) is not supported.')
 
-        self.max_dist = np.linalg.norm(np.array([0, 0]) - np.array([2, 8]), 1)
+        self.max_dist = np.linalg.norm(np.array([0, 0]) - np.array([2, 8]), 1) 
         self.agent_order = list(range(n_agents))
         self.viewer = None
 
-        self.room_boundaries = np.unique(np.array(self.layout['WALLS'])[:, 1]).tolist()[::-1]
+        self.room_boundaries = [20,12,5]
         self.room_boundaries.append(-1)
 
     def step(self, actions):
@@ -223,12 +223,18 @@ class PressurePlate(gym.Env):
 
         return self._get_obs()
 
-    def _get_obs(self):
+    def _get_obs(self, mode = False, agents_loc = [[0,0], [1,1], [2,2], [3,3]], a = 0):
         obs = []
-
+        i = 0         
+        
         for agent in self.agents:
             x, y = agent.x, agent.y
-            pad = self.sensor_range // 2
+            
+            if mode:
+                x, y = agents_loc[i,0], agents_loc[i,1]
+                i += 1
+            
+            pad = self.sensor_range 
 
             x_left = max(0, x - pad)
             x_right = min(self.grid_size[1] - 1, x + pad)
@@ -290,7 +296,7 @@ class PressurePlate(gym.Env):
             _goal = _goal.reshape(-1)
 
             # Concat
-            obs.append(np.concatenate((_agents, _plates, _doors, _goal, np.array([x, y])), axis=0, dtype=np.float32))
+            obs.append(np.concatenate((_agents, _walls, _doors, _plates, np.array([x, y])), axis=0, dtype=np.float32))
 
         return tuple(obs)
 
@@ -341,7 +347,7 @@ class PressurePlate(gym.Env):
                 reward = - np.linalg.norm((np.array(plate_loc) - np.array(agent_loc)), 1) / self.max_dist
             else:
                 reward = -len(self.room_boundaries)+1 + curr_room
-            
+             
             rewards.append(reward)
         return rewards
 
@@ -354,7 +360,7 @@ class PressurePlate(gym.Env):
         return curr_room
 
     def _init_render(self):
-        from .rendering import Viewer
+        from rendering import Viewer
         self.viewer = Viewer(self.grid_size)
         self._rendering_initialized = True
 
