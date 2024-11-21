@@ -356,12 +356,13 @@ class PressurePlate(gym.Env):
             
             obs = self._get_obs()
     
-            self.plates_found[i] = 1 in obs[i][plate_id[0] : plate_id[1]+1]
+            
             
             # print(f"Found {self.plates_found}")
             
             # Reward calculation based on agent proximity to goal and room
             if i == curr_room:
+                self.plates_found[i] = 1 in obs[i][plate_id[0] : plate_id[1]+1]
                 if self.plates_found[i] == True:
                     reward = - np.linalg.norm((np.array(plate_loc) - np.array(agent_loc)), 1) / self.max_dist 
                 else:
