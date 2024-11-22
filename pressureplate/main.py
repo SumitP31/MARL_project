@@ -113,14 +113,10 @@ def plot(avg_reward, ep_reward):
     for i in range (n_agents):
         color = randomcolor.RandomColor().generate()    
         plt.plot(length, ep_rd[:,i], color= color[0],  alpha=0.4 )
-    # plt.plot(length, ep_rd[:,1], color='#82f397',  alpha=0.4 )
-    # plt.plot(length, ep_rd[:,2], color='#d782f3',  alpha=0.4 )
-    # plt.plot(length, ep_rd[:,3], color='#ee6f88', alpha=0.4 )
+
 
         plt.plot(length, avg_rd[:,i], color=color[0], label= f'Cumulative Reward for agent_{i}' )
-    # plt.plot(length, avg_rd[:,1], color='#22cf41', label='Cumulative Reward for agent_1' )
-    # plt.plot(length, avg_rd[:,2], color='#a31cbb', label='Cumulative Reward for agent_2' )
-    # plt.plot(length, avg_rd[:,3], color='#e71313', label='Cumulative Reward for agent_3' )
+
     
     plt.title('Episode vs Cumulative Reward')
     plt.xlabel('Episode')
