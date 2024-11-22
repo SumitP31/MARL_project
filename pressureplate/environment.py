@@ -1,3 +1,4 @@
+
 import gym
 from gym import spaces
 import numpy as np
@@ -78,6 +79,7 @@ class PressurePlate(gym.Env):
         self.walls = []
         self.doors = []
         self.goal = None
+        self.plates_found = []
 
         self._rendering_initialized = False
 
@@ -97,8 +99,10 @@ class PressurePlate(gym.Env):
         self.agent_order = list(range(n_agents))
         self.viewer = None
 
-        self.room_boundaries = [20,12,5]
+        #change this to define levels ********************************************************
+        self.room_boundaries = [20,12,5]  #np.unique(np.array(self.layout['WALLS'])[:, 1]).tolist()[::-1] # change this for every enviroment Very important [20,12,5] for max
         self.room_boundaries.append(-1)
+
 
     def step(self, actions):
         """obs, reward, done info"""
@@ -220,6 +224,9 @@ class PressurePlate(gym.Env):
         self.goal = []
         self.goal = Goal('goal', self.layout['GOAL'][0][0], self.layout['GOAL'][0][1])
         self.grid[_LAYER_GOAL, self.layout['GOAL'][0][1], self.layout['GOAL'][0][0]] = 1
+        
+        # PLates Found
+        self.plates_found = [False] * (len(self.plates)+1)
 
         return self._get_obs()
 
@@ -327,26 +334,48 @@ class PressurePlate(gym.Env):
 
         return grid
 
-    def _get_rewards(self):
+    def _get_rewards(self, agent_cord = [[0,0], [0,0],[0,0],[0,0]], mode = False):
         rewards = []
 
+        plate_id = [((2 * self.sensor_range + 1) ** 2) * 3, (((2 * self.sensor_range + 1) ** 2) * 4)-1]
+            
         # The last agent's desired location is the goal instead of a plate, so we use an if/else block
         # to break between the two cases
-        for i, agent in enumerate(self.agents):
-
-            if i == len(self.agents) - 1:
+        for i, agent in enumerate(self.agents ):
+            
+            if i == len(self.agents) - 1:                
                 plate_loc = self.goal.x, self.goal.y
             else:
                 plate_loc = self.plates[i].x, self.plates[i].y
 
             curr_room = self._get_curr_room_reward(agent.y)
 
-            agent_loc = agent.x, agent.y
-
-            if i == curr_room:
-                reward = - np.linalg.norm((np.array(plate_loc) - np.array(agent_loc)), 1) / self.max_dist
+            if mode == False:
+                agent_loc = agent.x, agent.y
+            elif mode == True:
+                agent_loc = (agent_cord[i][0], agent_cord[i][1])
+            
+            obs = self._get_obs()
+            plate_count = self.plates_found.count(True)
+            # print(plate_count)
+            
+            found = 1 in obs[i][plate_id[0] : plate_id[1]+1]
+            # if i >= curr_rooms:
+            if found == True:
+                self.plates_found[curr_room] = True
+            
+            
+            # print(f"Found {self.plates_found}")
+            
+            # Reward calculation based on agent proximity to goal and room
+            if i == curr_room:                
+                
+                if self.plates_found[i] == True:
+                    reward = - np.linalg.norm((np.array(plate_loc) - np.array(agent_loc)), 1) / self.max_dist 
+                else:
+                    reward = -len(self.room_boundaries)+ curr_room                
             else:
-                reward = -len(self.room_boundaries)+1 + curr_room
+                reward = -len(self.room_boundaries)+ curr_room
              
             rewards.append(reward)
         return rewards
