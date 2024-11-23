@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import randomcolor
 
 # Hyperparameters
-n_episodes = 1000       # Total number of episodes to run
+n_episodes = 10       # Total number of episodes to run
 max_steps = 500         # Max steps per episode
 gridsize = (28,16)      # Size of the grid environment (28,16) for max
 n_agents = 4             # Number of agents in the environment
@@ -36,6 +36,8 @@ env = PressurePlate(gridsize[0], gridsize[1], n_agents, a_range, 'linear')
 obs_ = env.reset()
 
 Q = np.zeros((n_agents, gridsize[1], gridsize[0], n_actions), dtype=float)
+
+Td_error = np.zeros((n_agents, gridsize[1], gridsize[0], n_actions), dtype=float)
 
 policy = np.zeros((n_agents, gridsize[1], gridsize[0]), dtype=int)
 #--------------------------------------------------------------------------------------------------------
@@ -97,8 +99,10 @@ def q_value(Q, state, agent):
         st_[agent] = next_st       
         reward = agent_reward(st_, agent)
         # print(f"reward for agent {agent} at state {st_} {reward}")
+        error = reward + gamma * np.max(Q[next_st[0], next_st[1]]) - Q[st[agent][0], st[agent][1], a]
+        
         # Update Q-value using the Bellman equation
-        Q[st[agent][0], st[agent][1], a] += alpha * (reward + gamma * np.max(Q[next_st[0], next_st[1]]) - Q[st[agent][0], st[agent][1], a])
+        Q[st[agent][0], st[agent][1], a] += alpha * (error)
     
     action = np.argmax(Q[state[agent][0], state[agent][1]])
     
@@ -111,9 +115,9 @@ def plot(avg_reward, ep_reward):
     
     plt.figure(figsize=(12, 6))
     for i in range (n_agents):
-        color = randomcolor.RandomColor().generate()    
+        color = randomcolor.RandomColor().generate()  
+          
         plt.plot(length, ep_rd[:,i], color= color[0],  alpha=0.4 )
-
 
         plt.plot(length, avg_rd[:,i], color=color[0], label= f'Cumulative Reward for agent_{i}' )
 
@@ -124,7 +128,7 @@ def plot(avg_reward, ep_reward):
     
     plt.legend()
     
-    plt.savefig("output.jpg")
+    plt.savefig(f"{n_agents}_{gridsize}_full_obs.jpg")
     
     plt.show()
 
@@ -168,6 +172,8 @@ def main():
         for i in range(n_agents):
             total_reward[i] += ep_reward[i]
             rd[i] = total_reward[i]/(episode + 1)
+        
+            
         avg_reward.append(rd)
 
         episode_reward.append(ep_reward)
@@ -181,5 +187,6 @@ if __name__ == "__main__":
 avg_reward = np.array(avg_reward)
 episode_reward = np.array(episode_reward)
 
-np.save('q_roll_avg_reward.npy', avg_reward)
-np.save('q_roll_episode_reward.npy', episode_reward)
+np.save(f'{n_agents}_{gridsize}_q_roll_avg_reward.npy', avg_reward)
+np.save(f'{n_agents}_{gridsize}_q_roll_episode_reward.npy', episode_reward)
+np.save(f'{n_agents}_{gridsize}_q_roll_policy.npy', policy)
