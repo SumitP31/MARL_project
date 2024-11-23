@@ -178,5 +178,6 @@ episode_reward = np.array(episode_reward)
 
 np.save(f'{n_agents}_{gridsize}_part_q_roll_avg_reward.npy', avg_reward)
 np.save(f'{n_agents}_{gridsize}_part_q_roll_episode_reward.npy', episode_reward)
+np.save(f'{n_agents}_{gridsize}_part_q_roll_policy.npy', policy)
 
 
