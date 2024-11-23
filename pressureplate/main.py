@@ -111,7 +111,7 @@ def plot(avg_reward, ep_reward):
     
     plt.legend()
     
-    plt.savefig(f"{n_agents}_{gridsize}_part.jpg")
+    plt.savefig(f"{n_agents}_{gridsize}_part_com.jpg")
     
     plt.show()
 
@@ -176,8 +176,8 @@ if __name__ == "__main__":
 avg_reward = np.array(avg_reward)
 episode_reward = np.array(episode_reward)
 
-np.save(f'{n_agents}_{gridsize}_part_q_roll_avg_reward.npy', avg_reward)
-np.save(f'{n_agents}_{gridsize}_part_q_roll_episode_reward.npy', episode_reward)
-np.save(f'{n_agents}_{gridsize}_part_q_roll_policy.npy', policy)
+np.save(f'{n_agents}_{gridsize}_part_com_q_roll_avg_reward.npy', avg_reward)
+np.save(f'{n_agents}_{gridsize}_part_com_q_roll_episode_reward.npy', episode_reward)
+np.save(f'{n_agents}_{gridsize}_part_com_q_roll_policy.npy', policy)
 
 
