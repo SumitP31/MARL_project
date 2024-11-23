@@ -9,8 +9,8 @@ import randomcolor
 # Hyperparameters
 n_episodes = 1000     # Total number of episodes to run
 max_steps = 700         # Max steps per episode
-gridsize = (28,16)      # Size of the grid environment (28,16) for max
-n_agents = 4            # Number of agents in the environment
+gridsize = (23,9)      # Size of the grid environment (28,16) for max
+n_agents = 6            # Number of agents in the environment
 n_actions = 5            # Number of possible actions each agent can take
 a_range = 1              # Agent's observation range
 a_co = ((2 * a_range + 1) ** 2) * 4  # Index for agent coordinates in observation
@@ -198,5 +198,5 @@ avg_reward = np.array(avg_reward)
 episode_reward = np.array(episode_reward)
 
 np.save(f'{n_agents}_{gridsize}_part_q_roll_avg_reward.npy', avg_reward)
-np.save(f'{n_agents}_{gridsize}_part_q_roll_episode_reward.npy', episode_reward
+np.save(f'{n_agents}_{gridsize}_part_q_roll_episode_reward.npy', episode_reward)
 np.save(f'{n_agents}_{gridsize}_part_q_roll_learned_policy.npy', policy)
