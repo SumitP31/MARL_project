@@ -98,7 +98,7 @@ class PressurePlate(gym.Env):
         self.viewer = None
 
         #change this to define levels ********************************************************
-        self.room_boundaries = [20,12,5] # np.unique(np.array(self.layout['WALLS'])[:, 1]).tolist()[::-1] # change this for every enviroment Very important [20,12,5] for max
+        self.room_boundaries =  np.unique(np.array(self.layout['WALLS'])[:, 1]).tolist()[::-1] # change this for every enviroment Very important [20,12,5] for max
         self.room_boundaries.append(-1)
 
     def step(self, actions):
