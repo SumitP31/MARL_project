@@ -187,6 +187,6 @@ if __name__ == "__main__":
 avg_reward = np.array(avg_reward)
 episode_reward = np.array(episode_reward)
 
-np.save(f'{n_agents}_{gridsize}_q_roll_avg_reward.npy', avg_reward)
-np.save(f'{n_agents}_{gridsize}_q_roll_episode_reward.npy', episode_reward)
-np.save(f'{n_agents}_{gridsize}_q_roll_policy.npy', policy)
+np.save(f'{n_agents}_{gridsize}_q_roll_full_avg_reward.npy', avg_reward)
+np.save(f'{n_agents}_{gridsize}_q_roll_full_episode_reward.npy', episode_reward)
+np.save(f'{n_agents}_{gridsize}_q_roll_full_policy.npy', policy)
