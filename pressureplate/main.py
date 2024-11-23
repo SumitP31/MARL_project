@@ -38,7 +38,6 @@ env = PressurePlate(gridsize[0], gridsize[1], n_agents, a_range, 'linear')
 obs_ = env.reset()
 
 Q = np.zeros((n_agents, gridsize[1], gridsize[0], n_actions), dtype=float)
-Td_error = np.zeros((n_agents, gridsize[1], gridsize[0], n_actions), dtype=float)
 
 policy = np.zeros((n_agents, gridsize[1], gridsize[0]), dtype=int)
 #--------------------------------------------------------------------------------------------------------
@@ -110,10 +109,7 @@ def q_value(Q, state, agent):
         reward= rewards[agent]
         # print(f"reward for agent {agent} at state {st_} {reward}")
         # Update Q-value using the Bellman equation
-        error  = reward + gamma * np.max(Q[next_st[0], next_st[1]]) - Q[st[agent][0], st[agent][1], a]
-        
-        Td_error[agent, st[agent][0], st[agent][1], a] = error
-        
+        error  = reward + gamma * np.max(Q[next_st[0], next_st[1]]) - Q[st[agent][0], st[agent][1], a]       
         
         Q[st[agent][0], st[agent][1], a] += alpha * (error)
     
@@ -202,6 +198,5 @@ avg_reward = np.array(avg_reward)
 episode_reward = np.array(episode_reward)
 
 np.save(f'{n_agents}_{gridsize}_part_q_roll_avg_reward.npy', avg_reward)
-np.save(f'{n_agents}_{gridsize}_part_q_roll_episode_reward.npy', episode_reward)
-np.save(f'{n_agents}_{gridsize}_part_q_roll_TD-Error.npy', Td_error)
+np.save(f'{n_agents}_{gridsize}_part_q_roll_episode_reward.npy', episode_reward
 np.save(f'{n_agents}_{gridsize}_part_q_roll_learned_policy.npy', policy)
