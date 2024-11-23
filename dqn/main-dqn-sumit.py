@@ -16,6 +16,7 @@ n_actions = 5            # Number of possible actions each agent can take
 a_range = 2              # Agent's observation range
 a_co = ((2 * a_range + 1) ** 2) * 4  # Index for agent coordinates in observation
 actions = [0,1,2,3,4]
+agents = []
 
 # # Q-learning parameters
 # alpha = 1             # Learning rate
@@ -138,9 +139,10 @@ if __name__ == "__main__":
     state_dim = gridsize[0]*gridsize[1]
     
     action_dim = 5
+    for i in range(n_agents):
+        agents.append(DQNAgent(state_dim, action_dim))
     
-    agent = DQNAgent(state_dim, action_dim)
-    print(agent)
+    # print(agent)
     episodes = 500
     batch_size = 32
     
@@ -148,27 +150,32 @@ if __name__ == "__main__":
         state = env.reset()
         state = np.ravel(state)  # Flatten state
         total_reward = 0
-        
+        print(f"episode is {episode}-----------------------")
         for step in range(500):  # Maximum steps per episode
-            action = agent.act(state)
-            print(agent)
-            temp_action = [4]*n_agents
-            print(action)
-            temp_action[agent] =  action
-            next_state, rd, done, _ = env.step(temp_action)
-            # next_state = np.ravel(next_state)  # Flatten next state
+            for i in range(n_agents):
+                action = agents[i].act(state)
+                # print(agent)
+                temp_action = [4]*n_agents
+                
+                # print(action)
+                
+                temp_action[i] =  action
+                next_state, rd, done, _ = env.step(temp_action)
+                # next_state = np.ravel(next_state)  # Flatten next state
 
-            stat = np.array([next_state[i][a_co:a_co + 2] for i in range(n_agents)], dtype=int)
+                stat = np.array(next_state[i][a_co:a_co + 2], dtype=int)
 
-            reward = agent_reward(stat,agent)
-            agent.store_transition(state, action, reward, next_state, done)
-            state = next_state
-            total_reward += reward
-            
-            if done:
-                break
+                reward = agent_reward(stat,i)
+                agents[i].store_transition(state, action, reward, next_state, done)
+                state = next_state
+                total_reward += reward
+                
+                env.render()
+                
+                # if done:
+                #     break
         
-        agent.replay(batch_size)
-        agent.update_target_model()
+        agents.replay(batch_size)
+        agents.update_target_model()
         
         print(f"Episode {episode+1}/{episodes}, Total Reward: {total_reward}, Epsilon: {agent.epsilon:.4f}")
