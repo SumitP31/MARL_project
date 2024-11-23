@@ -51,30 +51,7 @@ def policy_eval(state):
         actions.append(policy[i, x, y])
     return actions
 
-# Function to calculate agent-specific rewards
-# def agent_reward(next_state, agent):
-    
-#     goal_loc = (env.goal.x, env.goal.y) if agent == (n_agents-1) else (env.plates[agent].x, env.plates[agent].y)
-#     curr_room = env._get_curr_room_reward(next_state[agent][1])
-#     agent_loc = (next_state[agent][0], next_state[agent][1])
-    
-#     obs = env._get_obs(True, next_state, agent)
-   
-#     plate_found[agent] = 1 in obs[agent][plate_id[0] : plate_id[1]+1]
-    
 
-#     # Reward calculation based on agent proximity to goal and room
-    
-#     if agent == curr_room:
-#         if plate_found[agent] == True:
-#             reward = - np.linalg.norm((np.array(goal_loc) - np.array(agent_loc)), 1) / env.max_dist
-#         else:
-#             reward = -len(env.room_boundaries)+ curr_room
-#     else:
-#         reward = -len(env.room_boundaries) + curr_room
-        
-#     # print(f"for agent{agent} the reward is {reward} if plate found is {plate_found}")
-#     return reward
 
 # Function to determine the next state based on the current state and action
 def state_transition(state, action):
