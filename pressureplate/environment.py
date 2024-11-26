@@ -100,7 +100,7 @@ class PressurePlate(gym.Env):
         self.viewer = None
 
         #change this to define levels ********************************************************
-        self.room_boundaries = [20,12,5]  #np.unique(np.array(self.layout['WALLS'])[:, 1]).tolist()[::-1] # change this for every enviroment Very important [20,12,5] for max
+        self.room_boundaries = [20,12,5] #np.unique(np.array(self.layout['WALLS'])[:, 1]).tolist()[::-1] # change this for every enviroment Very important [20,12,5] for max
         self.room_boundaries.append(-1)
 
 
@@ -356,8 +356,9 @@ class PressurePlate(gym.Env):
                 agent_loc = (agent_cord[i][0], agent_cord[i][1])
             
             obs = self._get_obs()
-            plate_count = self.plates_found.count(True)
-            # print(plate_count)
+            
+            # plate_count = self.plates_found.count(True)
+            # print(obs[i][plate_id[0] : plate_id[1]+1])
             
             found = 1 in obs[i][plate_id[0] : plate_id[1]+1]
             # if i >= curr_rooms:
@@ -365,12 +366,13 @@ class PressurePlate(gym.Env):
                 self.plates_found[curr_room] = True
             
             
-            # print(f"Found {self.plates_found}")
+            # print(f"Found {self.plates_found} in room {curr_room} for sensor {self.sensor_range}")
             
             # Reward calculation based on agent proximity to goal and room
             if i == curr_room:                
                 
                 if self.plates_found[i] == True:
+                    # print(self.plates_found)
                     reward = - np.linalg.norm((np.array(plate_loc) - np.array(agent_loc)), 1) / self.max_dist 
                 else:
                     reward = -len(self.room_boundaries)+ curr_room                

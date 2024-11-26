@@ -13,7 +13,7 @@ max_steps = 1000         # Max steps per episode
 gridsize = (28,16)      # Size of the grid environment (28,16) for max
 n_agents = 4            # Number of agents in the environment
 n_actions = 5            # Number of possible actions each agent can take
-a_range = 1              # Agent's observation range
+a_range = 2              # Agent's observation range
 a_co = ((2 * a_range + 1) ** 2) * 4  # Index for agent coordinates in observation
 
 plate_id = [((2 * a_range + 1) ** 2) * 3, (((2 * a_range + 1) ** 2) * 4)-1]
@@ -21,17 +21,17 @@ global plate_found
 plate_found = [False] * n_agents
 
 # Q-learning parameters
-alpha = 1     # Learning rate
+alpha = 0.1     # Learning rate
 gamma = 1    # Discount factor for future rewards
-epsilon = 1e-3    # Epsilon for epsilon-greedy policy
-threshold = 2e4  # Convergence threshold for episodic reward value
+# epsilon = 1e-3    # Epsilon for epsilon-greedy policy
+# threshold = 2e4  # Convergence threshold for episodic reward value
 
 # Initialize total rewards
 total_reward = [float(0)] * n_agents
 avg_reward = []
 episode_reward = []
 
-# Plate_found function
+
 
 # Initialize environment and Q-values
 env = PressurePlate(gridsize[0], gridsize[1], n_agents, a_range, 'linear')
@@ -84,7 +84,9 @@ def q_value(Q, state, agent):
         next_st = state_transition(st[agent], a)
         st_[agent] = next_st       
         rewards = env._get_rewards(st_,True)
+        
         reward= rewards[agent]
+        
         # print(f"reward for agent {agent} at state {st_} {reward}")
         # Update Q-value using the Bellman equation
         Q[st[agent][0], st[agent][1], a] += alpha * (reward + gamma * np.max(Q[next_st[0], next_st[1]]) - Q[st[agent][0], st[agent][1], a])
@@ -111,7 +113,7 @@ def plot(avg_reward, ep_reward):
     
     plt.legend()
     
-    plt.savefig(f"{n_agents}_{gridsize}_part.jpg")
+    plt.savefig(f"{n_agents}_{gridsize}_part{a_range}_alpha{alpha}_gamma{gamma}.jpg")
     
     plt.show()
 
@@ -144,29 +146,30 @@ def main():
                 
                 state[agent] = np.array(obs[agent][a_co:a_co + 2], dtype=int)
                 
-                # print(rewards)
+                
                 
                 if all(done):
-                    # print(f"Episode: {episode} finished")
                     break
                 
                 
                 # if episode > n_episodes-10:
                 # env.render()
                 # Uncomment to slow down rendering
-                # time.sleep(0.05)
-                
+                # time.sleep(0.5)
+            # print(rewards)
+            
         print(f"Episode: {episode} ")
         
         # Update total and average rewards
         for i in range(n_agents):
             total_reward[i] += ep_reward[i]
             rd[i] = total_reward[i]/(episode + 1)
-            
+           
         avg_reward.append(rd)
 
         episode_reward.append(ep_reward)
-    
+
+        # print(f"episode {episode} : {ep_reward}")
     # Plot the results
     plot(avg_reward, episode_reward)
         
@@ -176,7 +179,8 @@ if __name__ == "__main__":
 avg_reward = np.array(avg_reward)
 episode_reward = np.array(episode_reward)
 
-np.save(f'{n_agents}_{gridsize}_part_q_roll_avg_reward.npy', avg_reward)
-np.save(f'{n_agents}_{gridsize}_part_q_roll_episode_reward.npy', episode_reward)
+np.save(f'{n_agents}_{gridsize}_part{a_range}_q_roll_avg_reward_alpha{alpha}_gamma{gamma}.npy', avg_reward)
+np.save(f'{n_agents}_{gridsize}_part{a_range}_q_roll_episode_reward.npy', episode_reward)
+np.save(f'{n_agents}_{gridsize}_part{a_range}_q_roll_policy_alpha{alpha}_gamma{gamma}.npy', policy)
 
 
